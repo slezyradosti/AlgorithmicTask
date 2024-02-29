@@ -1,6 +1,6 @@
 ﻿using AlgorithmicTask.Core;
 
-namespace AlgorithmicTask.Handlers
+namespace AlgorithmicTask.InputReaders
 {
     public class FileInputHandler
     {
@@ -34,7 +34,7 @@ namespace AlgorithmicTask.Handlers
                 return Result<List<int>>.Failure("Empty data.");
             }
 
-            List<int> numbers = new List<int>(splitInput.Length);      
+            List<int> numbers = new List<int>(splitInput.Length);
 
             try
             {
@@ -43,7 +43,7 @@ namespace AlgorithmicTask.Handlers
             }
             catch (Exception e)
             {
-                numbers= new List<int>();
+                numbers = new List<int>();
                 return Result<List<int>>.Failure($"Unable to read file numbers!");
             }
         }

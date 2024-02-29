@@ -1,4 +1,4 @@
-﻿using AlgorithmicTask.Handlers;
+﻿using AlgorithmicTask.InputReaders;
 
 namespace AlgorithmicTask
 {
