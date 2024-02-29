@@ -24,5 +24,20 @@ namespace AlgorithmicTask.Handlers
             max = nums.Max();
             return Result<string>.Success("");
         }
+
+        // mean = sum / count
+        public Result<string> FindMean(IList<int> nums, out double mean)
+        {
+            mean = 0;
+
+            if (nums == null || nums.Count == 0) Result<string>.Failure("Empty data");
+
+            // sum of all numbers could be more than int value can contain
+            // that why we use long int and parallel couting
+            long sum = nums.AsParallel().Sum(x => (long)x);
+            mean = sum / (double)nums.Count;
+
+            return Result<string>.Success("");
+        }
     }
 }
