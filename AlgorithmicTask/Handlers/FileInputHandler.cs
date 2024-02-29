@@ -1,5 +1,4 @@
 ﻿using AlgorithmicTask.Core;
-using System.Net;
 
 namespace AlgorithmicTask.Handlers
 {
@@ -28,6 +27,25 @@ namespace AlgorithmicTask.Handlers
             }
         }
 
-        
+        public Result<List<int>> GetNumersList(string[] splitInput)
+        {
+            if (splitInput == null || splitInput.Length <= 0)
+            {
+                return Result<List<int>>.Failure("Empty data.");
+            }
+
+            List<int> numbers = new List<int>(splitInput.Length);      
+
+            try
+            {
+                numbers = new List<int>(Array.ConvertAll(splitInput, int.Parse));
+                return Result<List<int>>.Success(numbers);
+            }
+            catch (Exception e)
+            {
+                numbers= new List<int>();
+                return Result<List<int>>.Failure($"Unable to read file numbers!");
+            }
+        }
     }
 }
