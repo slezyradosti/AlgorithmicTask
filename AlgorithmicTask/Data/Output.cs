@@ -4,8 +4,8 @@
     {
         public int Max { get; set; }
         public int Min { get; set; }
-        public int Median { get; set; }
-        public int Mean { get; set; }
+        public double Median { get; set; }
+        public double Mean { get; set; }
         public int MaxSequenceLengthASC { get; set; }
         public string MaxSequenceDataASC { get; set; }
         public int MaxSequenceLengthDESC { get; set; }
