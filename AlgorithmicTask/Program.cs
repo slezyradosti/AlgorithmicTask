@@ -1,4 +1,5 @@
-﻿using AlgorithmicTask.InputReaders;
+﻿using AlgorithmicTask.Handlers;
+using AlgorithmicTask.InputReaders;
 
 namespace AlgorithmicTask
 {
@@ -11,12 +12,18 @@ namespace AlgorithmicTask
             string filepath = @"" + Console.ReadLine();
 
             var splitInput = await fileInputHandler.ReadDataFromFileToStringAsync(filepath);
-            var nums = fileInputHandler.GetNumersList(splitInput.Value);
+            var nums = fileInputHandler.GetNumersList(splitInput.Value).Value;
 
-            foreach ( var i in nums.Value )
-            {
-                Console.WriteLine(i);
-            }
+            BuiltinAlgorithsHandler builtinAlgorithsHandler = new BuiltinAlgorithsHandler();
+
+            var res = builtinAlgorithsHandler.FindMinMax(nums, out int min, out int max);
+            res = builtinAlgorithsHandler.FindMean(nums, out double mean);
+            res = builtinAlgorithsHandler.FindMedian(nums, out double median);
+
+            Console.WriteLine("Min: " + min);
+            Console.WriteLine("Max: " + max);
+            Console.WriteLine("Mean: " + mean);
+            Console.WriteLine("Median: " + median);
         }
     }
 }

@@ -39,5 +39,25 @@ namespace AlgorithmicTask.Handlers
 
             return Result<string>.Success("");
         }
+
+        public Result<string> FindMedian(IList<int> nums, out double median)
+        {
+            if (nums == null || nums.Count == 0) Result<string>.Failure("Empty data");
+
+            var sortedArray = nums.Order().ToList();
+            int numbersCount = sortedArray.Count;
+
+            if (numbersCount % 2 == 0)
+            {
+                int middle = numbersCount / 2;
+                median = (sortedArray[middle - 1] + sortedArray[middle]) / 2.0;
+            }
+            else
+            {
+                median = sortedArray[numbersCount / 2];
+            }
+
+            return Result<string>.Success("");
+        }
     }
 }
