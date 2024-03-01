@@ -99,5 +99,44 @@ namespace AlgorithmicTask.Handlers
 
             return Result<string>.Success("");
         }
+
+        public Result<string> FindMaxSequenceDESC(IList<int> nums, out int resultLength, out string resultSequence)
+        {
+            resultSequence = "";
+            resultLength = 0;
+
+            if (nums == null || nums.Count == 0) return Result<string>.Failure("Empty data");
+
+            string tempSequence = $"{nums[0]}, ";
+            int tempLength = 1;
+
+            for (int i = 1; i < nums.Count; i++)
+            {
+                if (nums[i] < nums[i - 1])
+                {
+                    tempLength++;
+                    tempSequence += $"{nums[i]}, ";
+                }
+                else
+                {
+                    if (tempLength > resultLength)
+                    {
+                        resultSequence = tempSequence;
+                        resultLength = tempLength;
+                    }
+
+                    tempSequence = $"{nums[i]}, ";
+                    tempLength = 1;
+                }
+            }
+
+            if (tempLength > resultLength)
+            {
+                resultSequence = tempSequence;
+                resultLength = tempLength;
+            }
+
+            return Result<string>.Success("");
+        }
     }
 }
