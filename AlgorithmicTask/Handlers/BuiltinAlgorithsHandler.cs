@@ -68,7 +68,7 @@ namespace AlgorithmicTask.Handlers
 
             if (nums == null || nums.Count == 0) return Result<string>.Failure("Empty data");
 
-            string tempSequence = $"{nums[0]}, ";
+            StringBuilder tempSequence = new StringBuilder(nums[0] + ", ");
             int tempLength = 1;
 
             for (int i = 1; i < nums.Count; i++)
@@ -76,24 +76,25 @@ namespace AlgorithmicTask.Handlers
                 if (nums[i] > nums[i - 1])
                 {
                     tempLength++;
-                    tempSequence += $"{nums[i]}, ";
+                    tempSequence.Append(nums[i] + ", ");
                 }
                 else
                 {
                     if (tempLength > resultLength)
                     {
-                        resultSequence = tempSequence;
+                        resultSequence = tempSequence.ToString();
                         resultLength = tempLength;
                     }
 
-                    tempSequence = $"{nums[i]}, ";
+                    tempSequence.Clear();
+                    tempSequence.Append(nums[i] + ", ");
                     tempLength = 1;
                 }
             }
 
             if (tempLength > resultLength)
             {
-                resultSequence = tempSequence;
+                resultSequence = tempSequence.ToString();
                 resultLength = tempLength;
             }
 
@@ -107,7 +108,7 @@ namespace AlgorithmicTask.Handlers
 
             if (nums == null || nums.Count == 0) return Result<string>.Failure("Empty data");
 
-            string tempSequence = $"{nums[0]}, ";
+            StringBuilder tempSequence = new StringBuilder(nums[0] + ", ");
             int tempLength = 1;
 
             for (int i = 1; i < nums.Count; i++)
@@ -115,24 +116,25 @@ namespace AlgorithmicTask.Handlers
                 if (nums[i] < nums[i - 1])
                 {
                     tempLength++;
-                    tempSequence += $"{nums[i]}, ";
+                    tempSequence.Append(nums[i] + ", ");
                 }
                 else
                 {
                     if (tempLength > resultLength)
                     {
-                        resultSequence = tempSequence;
+                        resultSequence = tempSequence.ToString();
                         resultLength = tempLength;
                     }
 
-                    tempSequence = $"{nums[i]}, ";
+                    tempSequence.Clear();
+                    tempSequence.Append(nums[i] + ", ");
                     tempLength = 1;
                 }
             }
 
             if (tempLength > resultLength)
             {
-                resultSequence = tempSequence;
+                resultSequence = tempSequence.ToString();
                 resultLength = tempLength;
             }
 
