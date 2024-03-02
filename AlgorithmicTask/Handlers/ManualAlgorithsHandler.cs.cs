@@ -1,4 +1,6 @@
-﻿using System;
+﻿using AlgorithmicTask.Core;
+using AlgorithmicTask.Data;
+using System;
 using System.Text;
 
 namespace AlgorithmicTask.Handlers
@@ -6,6 +8,34 @@ namespace AlgorithmicTask.Handlers
     public class ManualAlgorithsHandler
     {
         private List<int> _nums;
+
+        public Result<Outcome> StartAlgorithms(IList<int> nums)
+        {
+            Outcome outcome = new Outcome();
+            var unsortedNums = new List<int>(nums);
+
+            SortASaveToList(new List<int>(nums), 0, nums.Count - 1);
+
+            GetMinMax(_nums, out int min, out int max);
+            FindMean(_nums, out double mean);
+            FindMedian(_nums, out double median);
+            FindMaxSequenceASC(unsortedNums, out int ascSeqLength, out string ascSequence);
+            FindMaxSequenceDESC(unsortedNums, out int descSeqLength, out string descSequence);
+
+            outcome = new Outcome()
+            {
+                Min = min,
+                Max = max,
+                Mean = Math.Round(mean, 2),
+                Median = Math.Round(median, 2),
+                MaxSequenceLengthASC = ascSeqLength,
+                MaxSequenceDataASC = ascSequence,
+                MaxSequenceLengthDESC = descSeqLength,
+                MaxSequenceDataDESC = descSequence,
+            };
+
+            return Result<Outcome>.Success(outcome);
+        }
 
         private void SortASaveToList(IList<int> nums, int leftIndex, int rightIndex)
         {
