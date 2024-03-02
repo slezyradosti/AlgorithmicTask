@@ -5,7 +5,7 @@ using System.Text;
 
 namespace AlgorithmicTask.Handlers
 {
-    public class BuiltinAlgorithsHandler
+    public class BuiltinAlgorithmsHandler
     {
         public Result<Outcome> StartAlgorithms(IList<int> nums)
         {

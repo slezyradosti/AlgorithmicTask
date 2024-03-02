@@ -14,7 +14,7 @@ namespace AlgorithmicTask
             var splitInput = await fileInputHandler.ReadDataFromFileToStringAsync(filepath);
             var nums = fileInputHandler.GetNumersList(splitInput.Value).Value;
 
-            BuiltinAlgorithsHandler builtinAlgorithsHandler = new BuiltinAlgorithsHandler();
+            BuiltinAlgorithmsHandler builtinAlgorithsHandler = new BuiltinAlgorithmsHandler();
 
             ManualAlgorithsHandler manualAlgorithsHandler = new();
             var manRes = manualAlgorithsHandler.StartAlgorithms(nums).Value;
