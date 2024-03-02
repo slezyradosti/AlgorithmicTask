@@ -91,7 +91,7 @@ namespace AlgorithmicTask.Handlers
             }
         }
 
-        public void FindMaxSequenceASC(IList<int> nums, out int resultLength, out string resultSequence)
+        private void FindMaxSequenceASC(IList<int> nums, out int resultLength, out string resultSequence)
         {
             resultSequence = "";
             resultLength = 0;
@@ -104,6 +104,44 @@ namespace AlgorithmicTask.Handlers
             for (int i = 1; i < nums.Count; i++)
             {
                 if (nums[i] > nums[i - 1])
+                {
+                    tempLength++;
+                    tempSequence.Append(nums[i] + ", ");
+                }
+                else
+                {
+                    if (tempLength > resultLength)
+                    {
+                        resultSequence = tempSequence.ToString();
+                        resultLength = tempLength;
+                    }
+
+                    tempSequence.Clear();
+                    tempSequence.Append(nums[i] + ", ");
+                    tempLength = 1;
+                }
+            }
+
+            if (tempLength > resultLength)
+            {
+                resultSequence = tempSequence.ToString();
+                resultLength = tempLength;
+            }
+        }
+
+        private void FindMaxSequenceDESC(IList<int> nums, out int resultLength, out string resultSequence)
+        {
+            resultSequence = "";
+            resultLength = 0;
+
+            if (nums == null || nums.Count == 0) return;
+
+            StringBuilder tempSequence = new StringBuilder(nums[0] + ", ");
+            int tempLength = 1;
+
+            for (int i = 1; i < nums.Count; i++)
+            {
+                if (nums[i] < nums[i - 1])
                 {
                     tempLength++;
                     tempSequence.Append(nums[i] + ", ");
