@@ -72,5 +72,22 @@ namespace AlgorithmicTask.Handlers
 
             mean = sum / (double)nums.Count();
         }
+
+        // list must be ordered before
+        private void FindMedian(IList<int> nums, out double median)
+        {
+            median = 0;
+            if (nums == null || nums.Count == 0) return;
+
+            if (nums.Count % 2 == 0)
+            {
+                int middle = nums.Count / 2;
+                median = (nums[middle - 1] + nums[middle]) / 2.0;
+            }
+            else
+            {
+                median = nums[nums.Count / 2];
+            }
+        }
     }
 }
