@@ -43,5 +43,12 @@ namespace AlgorithmicTask.Handlers
                 QuickSort(nums, i, rightIndex);
             return nums;
         }
+
+        // list must be ordered before
+        private void GetMinMax(IList<int> nums, out int min, out int max)
+        {
+            min = nums[0];
+            max = nums[nums.Count - 1];
+        }
     }
 }
