@@ -1,11 +1,38 @@
 ﻿using AlgorithmicTask.Core;
+using AlgorithmicTask.Data;
+using System;
 using System.Text;
 
 namespace AlgorithmicTask.Handlers
 {
     public class BuiltinAlgorithsHandler
     {
-        public Result<string> FindMinMax(IList<int> nums, out int min, out int max)
+        public Result<Outcome> StartAlgorithms(IList<int> nums)
+        {
+            Outcome outcome = new Outcome();
+
+            FindMinMax(nums, out int min, out int max);
+            FindMean(nums, out double mean);
+            FindMedian(nums, out double median);
+            FindMaxSequenceASC(nums, out int ascSeqLength, out string ascSequence);
+            FindMaxSequenceDESC(nums, out int descSeqLength, out string descSequence);
+
+            outcome = new Outcome()
+            {
+                Min = min,
+                Max = max,
+                Mean = Math.Round(mean, 2),
+                Median = Math.Round(median, 2),
+                MaxSequenceLengthASC = ascSeqLength,
+                MaxSequenceDataASC = ascSequence,
+                MaxSequenceLengthDESC = descSeqLength,
+                MaxSequenceDataDESC = descSequence,
+            };
+
+            return Result<Outcome>.Success(outcome);
+        }
+
+        private Result<string> FindMinMax(IList<int> nums, out int min, out int max)
         {
             min = 0;
             max = 0;
@@ -27,7 +54,7 @@ namespace AlgorithmicTask.Handlers
         }
 
         // mean = sum / count
-        public Result<string> FindMean(IList<int> nums, out double mean)
+        private Result<string> FindMean(IList<int> nums, out double mean)
         {
             mean = 0;
 
@@ -41,27 +68,26 @@ namespace AlgorithmicTask.Handlers
             return Result<string>.Success("");
         }
 
-        public Result<string> FindMedian(IList<int> nums, out double median)
+        private Result<string> FindMedian(IList<int> nums, out double median)
         {
             if (nums == null || nums.Count == 0) Result<string>.Failure("Empty data");
 
             var sortedArray = nums.Order().ToList();
-            int numbersCount = sortedArray.Count;
 
-            if (numbersCount % 2 == 0)
+            if (sortedArray.Count % 2 == 0)
             {
-                int middle = numbersCount / 2;
+                int middle = sortedArray.Count / 2;
                 median = (sortedArray[middle - 1] + sortedArray[middle]) / 2.0;
             }
             else
             {
-                median = sortedArray[numbersCount / 2];
+                median = sortedArray[sortedArray.Count / 2];
             }
 
             return Result<string>.Success("");
         }
 
-        public Result<string> FindMaxSequenceASC(IList<int> nums, out int resultLength, out string resultSequence)
+        private Result<string> FindMaxSequenceASC(IList<int> nums, out int resultLength, out string resultSequence)
         {
             resultSequence = "";
             resultLength = 0;
@@ -101,7 +127,7 @@ namespace AlgorithmicTask.Handlers
             return Result<string>.Success("");
         }
 
-        public Result<string> FindMaxSequenceDESC(IList<int> nums, out int resultLength, out string resultSequence)
+        private Result<string> FindMaxSequenceDESC(IList<int> nums, out int resultLength, out string resultSequence)
         {
             resultSequence = "";
             resultLength = 0;
