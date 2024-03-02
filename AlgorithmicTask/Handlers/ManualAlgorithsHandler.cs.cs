@@ -47,8 +47,30 @@ namespace AlgorithmicTask.Handlers
         // list must be ordered before
         private void GetMinMax(IList<int> nums, out int min, out int max)
         {
+            min = 0;
+            max = 0;
+            if (nums == null || nums.Count == 0) return;
+
             min = nums[0];
             max = nums[nums.Count - 1];
+        }
+
+        private void FindMean(IList<int> nums, out double mean)
+        {
+            mean = 0;
+            long sum = 0;
+
+            if (nums == null || nums.Count == 0) return;
+
+            foreach (long i in nums)
+            {
+                if (sum + i <= long.MaxValue)
+                {
+                    sum += i;
+                }
+            }
+
+            mean = sum / (double)nums.Count();
         }
     }
 }
