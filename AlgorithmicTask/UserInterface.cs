@@ -86,10 +86,10 @@ namespace AlgorithmicTask
             switch (inputTypes)
             {
                 case InputTypes.File:
-                    workRes = await StartFileWork(algorithmType);
+                    workRes = await StartFileWork();
                     break;
                 case InputTypes.Console:
-                    // console work
+                    workRes = GetASetNumbersFromConsole();
                     break;
                 default: return;
             }
@@ -106,19 +106,32 @@ namespace AlgorithmicTask
             }
 
             // run algorithms
+            switch (algorithmType)
+            {
+                case AlgorithmTypes.BuiltIn:
+                    // buildin algorithms
+                    break;
+                case AlgorithmTypes.Manual:
+                    // manual algorithms
+                    break;
+                default: return;
+            }
+
+            // show results
+
         }
 
-        private async Task<Result<string>> StartFileWork(AlgorithmTypes algorithmTypes)
+        private async Task<Result<string>> StartFileWork()
         {
-            var res = GetNumbersFromFile();
+            var res = GetFilepath();
             if (!res.IsSuccess) return res;
 
-            res = await SetNumbersFromFile();
+            res = await ReadASetNumbersFromFile();
             
             return res;
         }
 
-        private Result<string> GetNumbersFromFile()
+        private Result<string> GetFilepath()
         {
             Console.Clear();
             Console.WriteLine("Enter Full file path (C:\\Users\\User\\filename.txt): ");
@@ -126,34 +139,60 @@ namespace AlgorithmicTask
 
             if (string.IsNullOrEmpty(_input.FilePath))
             {
-                DisplayErrorMessage("File path cannot be empty");
-                return Result<string>.Failure("");
+                //DisplayErrorMessage("File path cannot be empty");
+                return Result<string>.Failure("File path cannot be empty");
             }
 
             return Result<string>.Success("");
         }
 
-        private async Task<Result<string>> SetNumbersFromFile()
+        private async Task<Result<string>> ReadASetNumbersFromFile()
         {
             var result = await _fileHandler.ReadDataFromFileToStringAsync(_input.FilePath);
 
             if (!result.IsSuccess)
             {
-                DisplayErrorMessage(result.Error);
-                return Result<string>.Failure("");
+                //DisplayErrorMessage(result.Error);
+                return Result<string>.Failure(result.Error);
             }
 
             var resultList = _fileHandler.GetNumbersList(result.Value);
 
             if (!resultList.IsSuccess)
             {
-                DisplayErrorMessage(resultList.Error);
-                return Result<string>.Failure("");
+                //DisplayErrorMessage(resultList.Error);
+                return Result<string>.Failure(resultList.Error);
             }
 
             _input.Numbers = resultList.Value;
             return Result<string>.Success("");
         }
+
+        private Result<string> GetASetNumbersFromConsole()
+        {
+            var res = _consoleInputHandler.EnterDataFromConsole();
+            string input = "";
+
+            if (!res.IsSuccess)
+            {
+                //DisplayErrorMessage(res.Error);
+                return Result<string>.Failure(res.Error);
+            }
+
+            input = res.Value;
+
+            var resultNumbers = _consoleInputHandler.SetNumbersFromConsole(input);
+
+            if (!res.IsSuccess)
+            {
+                //DisplayErrorMessage(resultNumbers.Error);
+                return Result<string>.Failure(res.Error);
+            }
+
+            _input.Numbers = resultNumbers.Value;
+            return Result<string>.Success("");
+        }
+
 
         private void DisplayErrorMessage(string message)
         {
