@@ -193,6 +193,23 @@ namespace AlgorithmicTask
             return Result<string>.Success("");
         }
 
+        private void DisplayResults(Outcome outcome)
+        {
+            Console.Clear();
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("\n-----------------------------Result-----------------------------\n");
+            Console.ResetColor();
+            Console.WriteLine("Max value: " + outcome.Max);
+            Console.WriteLine("Min value: " + outcome.Min);
+            Console.WriteLine("Mean value: " + outcome.Mean);
+            Console.WriteLine("Median value: " + outcome.Median);
+            Console.WriteLine($"Ascending Sequence: \n\tLength: {outcome.MaxSequenceLengthASC}; \n\tSequecne: {outcome.MaxSequenceDataASC}");
+            Console.WriteLine($"Descending Sequence: \n\tLength: {outcome.MaxSequenceLengthDESC}; \n\tSequecne: {outcome.MaxSequenceDataDESC}");
+
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("\n----------------------------------------------------------------\n");
+            Console.ResetColor();
+        }
 
         private void DisplayErrorMessage(string message)
         {
