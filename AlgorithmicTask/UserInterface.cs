@@ -15,6 +15,7 @@ namespace AlgorithmicTask
         private ConsoleInputHandler _consoleInputHandler;
         private BuiltinAlgorithmsHandler _builtinAlgorithmsHandler;
         private ManualAlgorithsHandler _manualAlgorithmsHandler;
+        private Stopwatch _stopwatch;
 
         public UserInterface()
         {
@@ -24,6 +25,7 @@ namespace AlgorithmicTask
             _builtinAlgorithmsHandler = new BuiltinAlgorithmsHandler();
             _manualAlgorithmsHandler = new ManualAlgorithsHandler();
             _consoleInputHandler = new ConsoleInputHandler();
+            _stopwatch = new Stopwatch();
         }
 
         public async Task<char> Start()
@@ -151,11 +153,7 @@ namespace AlgorithmicTask
             Console.WriteLine("Enter Full file path (C:\\Users\\User\\filename.txt): ");
             _input.FilePath = @"" + Console.ReadLine();
 
-            if (string.IsNullOrEmpty(_input.FilePath))
-            {
-                //DisplayErrorMessage("File path cannot be empty");
-                return Result<string>.Failure("File path cannot be empty");
-            }
+            if (string.IsNullOrEmpty(_input.FilePath)) return Result<string>.Failure("File path cannot be empty");
 
             return Result<string>.Success("");
         }
@@ -164,19 +162,11 @@ namespace AlgorithmicTask
         {
             var result = await _fileHandler.ReadDataFromFileToStringAsync(_input.FilePath);
 
-            if (!result.IsSuccess)
-            {
-                //DisplayErrorMessage(result.Error);
-                return Result<string>.Failure(result.Error);
-            }
+            if (!result.IsSuccess) return Result<string>.Failure(result.Error);
 
             var resultList = _fileHandler.GetNumbersList(result.Value);
 
-            if (!resultList.IsSuccess)
-            {
-                //DisplayErrorMessage(resultList.Error);
-                return Result<string>.Failure(resultList.Error);
-            }
+            if (!resultList.IsSuccess) return Result<string>.Failure(resultList.Error);
 
             _input.Numbers = resultList.Value;
             return Result<string>.Success("");
@@ -187,21 +177,13 @@ namespace AlgorithmicTask
             var res = _consoleInputHandler.EnterDataFromConsole();
             string input = "";
 
-            if (!res.IsSuccess)
-            {
-                //DisplayErrorMessage(res.Error);
-                return Result<string>.Failure(res.Error);
-            }
+            if (!res.IsSuccess) return Result<string>.Failure(res.Error);
 
             input = res.Value;
 
             var resultNumbers = _consoleInputHandler.SetNumbersFromConsole(input);
 
-            if (!res.IsSuccess)
-            {
-                //DisplayErrorMessage(resultNumbers.Error);
-                return Result<string>.Failure(res.Error);
-            }
+            if (!res.IsSuccess) return Result<string>.Failure(res.Error);
 
             _input.Numbers = resultNumbers.Value;
             return Result<string>.Success("");
@@ -209,32 +191,48 @@ namespace AlgorithmicTask
 
         public Result<string> StartBuiltinAlgorithms()
         {
+            _stopwatch.Start();
+
             var nums = new List<int>(_input.Numbers);
 
             var res = _builtinAlgorithmsHandler.StartAlgorithms(nums);
 
-            if (!res.IsSuccess) return Result<string>.Failure(res.Error);
+            if (!res.IsSuccess)
+            {
+                _stopwatch.Stop();
+                return Result<string>.Failure(res.Error);
+            }
 
             _outcome = res.Value;
 
+            _stopwatch.Stop();
             return Result<string>.Success("");
         }
 
         public Result<string> StartManualAlgorithms()
         {
+            _stopwatch.Start();
+
             var nums = new List<int>(_input.Numbers);
 
             var res = _manualAlgorithmsHandler.StartAlgorithms(nums);
 
-            if (!res.IsSuccess) return Result<string>.Failure(res.Error);
+            if (!res.IsSuccess)
+            {
+                _stopwatch.Stop();
+                return Result<string>.Failure(res.Error);
+            }
 
             _outcome = res.Value;
 
+            _stopwatch.Stop();
             return Result<string>.Success("");
         }
 
         private void DisplayResults(Outcome outcome)
         {
+            TimeSpan timeTaken = _stopwatch.Elapsed;
+
             Console.Clear();
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("\n-----------------------------Result-----------------------------\n");
@@ -245,6 +243,10 @@ namespace AlgorithmicTask
             Console.WriteLine("Median value: " + outcome.Median);
             Console.WriteLine($"Ascending Sequence: \n\tLength: {outcome.MaxSequenceLengthASC}; \n\tSequecne: {outcome.MaxSequenceDataASC}");
             Console.WriteLine($"Descending Sequence: \n\tLength: {outcome.MaxSequenceLengthDESC}; \n\tSequecne: {outcome.MaxSequenceDataDESC}");
+
+            Console.ForegroundColor = ConsoleColor.Blue;
+            Console.WriteLine($"\nTime taken: " + timeTaken.ToString(@"m\:ss\.fff"));
+            Console.ResetColor();
 
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("\n----------------------------------------------------------------\n");
