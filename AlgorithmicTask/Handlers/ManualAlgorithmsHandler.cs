@@ -1,6 +1,5 @@
 ﻿using AlgorithmicTask.Core;
 using AlgorithmicTask.Data;
-using System;
 using System.Text;
 
 namespace AlgorithmicTask.Handlers
@@ -11,16 +10,28 @@ namespace AlgorithmicTask.Handlers
 
         public Result<Outcome> StartAlgorithms(IList<int> nums)
         {
+            if (nums == null || nums.Count == 0) return Result<Outcome>.Failure("Invalid data");
+
             Outcome outcome = new Outcome();
             var unsortedNums = new List<int>(nums);
+            Result<string> res = new();
 
             SortASaveToList(new List<int>(nums), 0, nums.Count - 1);
 
-            GetMinMax(_nums, out int min, out int max);
-            FindMean(_nums, out double mean);
-            FindMedian(_nums, out double median);
-            FindMaxSequenceASC(unsortedNums, out int ascSeqLength, out string ascSequence);
-            FindMaxSequenceDESC(unsortedNums, out int descSeqLength, out string descSequence);
+            res = GetMinMax(_nums, out int min, out int max);
+            if (!res.IsSuccess) return Result<Outcome>.Failure(res.Error);
+
+            res = FindMean(_nums, out double mean);
+            if (!res.IsSuccess) return Result<Outcome>.Failure(res.Error);
+
+            res = FindMedian(_nums, out double median);
+            if (!res.IsSuccess) return Result<Outcome>.Failure(res.Error);
+
+            res = FindMaxSequenceASC(unsortedNums, out int ascSeqLength, out string ascSequence);
+            if (!res.IsSuccess) return Result<Outcome>.Failure(res.Error);
+
+            res = FindMaxSequenceDESC(unsortedNums, out int descSeqLength, out string descSequence);
+            if (!res.IsSuccess) return Result<Outcome>.Failure(res.Error);
 
             outcome = new Outcome()
             {
@@ -76,22 +87,24 @@ namespace AlgorithmicTask.Handlers
         }
 
         // list must be ordered before
-        private void GetMinMax(IList<int> nums, out int min, out int max)
+        private Result<string> GetMinMax(IList<int> nums, out int min, out int max)
         {
             min = 0;
             max = 0;
-            if (nums == null || nums.Count == 0) return;
+            if (nums == null || nums.Count == 0) return Result<string>.Failure("Invalid data");
 
             min = nums[0];
             max = nums[nums.Count - 1];
+
+            return Result<string>.Success("");
         }
 
-        private void FindMean(IList<int> nums, out double mean)
+        private Result<string> FindMean(IList<int> nums, out double mean)
         {
             mean = 0;
             long sum = 0;
 
-            if (nums == null || nums.Count == 0) return;
+            if (nums == null || nums.Count == 0) return Result<string>.Failure("Invalid data");
 
             foreach (long i in nums)
             {
@@ -102,13 +115,15 @@ namespace AlgorithmicTask.Handlers
             }
 
             mean = sum / (double)nums.Count();
+
+            return Result<string>.Success("");
         }
 
         // list must be ordered before
-        private void FindMedian(IList<int> nums, out double median)
+        private Result<string> FindMedian(IList<int> nums, out double median)
         {
             median = 0;
-            if (nums == null || nums.Count == 0) return;
+            if (nums == null || nums.Count == 0) return Result<string>.Failure("Invalid data");
 
             if (nums.Count % 2 == 0)
             {
@@ -119,14 +134,16 @@ namespace AlgorithmicTask.Handlers
             {
                 median = nums[nums.Count / 2];
             }
+
+            return Result<string>.Success("");
         }
 
-        private void FindMaxSequenceASC(IList<int> nums, out int resultLength, out string resultSequence)
+        private Result<string> FindMaxSequenceASC(IList<int> nums, out int resultLength, out string resultSequence)
         {
             resultSequence = "";
             resultLength = 0;
 
-            if (nums == null || nums.Count == 0) return;
+            if (nums == null || nums.Count == 0) return Result<string>.Failure("Invalid data");
 
             StringBuilder tempSequence = new StringBuilder(nums[0] + ", ");
             int tempLength = 1;
@@ -157,14 +174,16 @@ namespace AlgorithmicTask.Handlers
                 resultSequence = tempSequence.ToString();
                 resultLength = tempLength;
             }
+
+            return Result<string>.Success("");
         }
 
-        private void FindMaxSequenceDESC(IList<int> nums, out int resultLength, out string resultSequence)
+        private Result<string> FindMaxSequenceDESC(IList<int> nums, out int resultLength, out string resultSequence)
         {
             resultSequence = "";
             resultLength = 0;
 
-            if (nums == null || nums.Count == 0) return;
+            if (nums == null || nums.Count == 0) return Result<string>.Failure("Invalid data");
 
             StringBuilder tempSequence = new StringBuilder(nums[0] + ", ");
             int tempLength = 1;
@@ -195,6 +214,8 @@ namespace AlgorithmicTask.Handlers
                 resultSequence = tempSequence.ToString();
                 resultLength = tempLength;
             }
+
+            return Result<string>.Success("");
         }
     }
 }
