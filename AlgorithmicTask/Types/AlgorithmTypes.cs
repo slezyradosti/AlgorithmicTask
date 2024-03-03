@@ -3,7 +3,7 @@
     [Flags]
     public enum AlgorithmTypes
     {
-        BuiltIn,
-        Manual
+        BuiltIn = 1,
+        Manual = 2
     }
 }

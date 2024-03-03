@@ -3,7 +3,7 @@
     [Flags]
     public enum InputTypes
     {
-        File,
-        Console
+        File = 1,
+        Console = 2
     }
 }
