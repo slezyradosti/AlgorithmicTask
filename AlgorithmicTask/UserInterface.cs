@@ -1,4 +1,5 @@
-﻿using AlgorithmicTask.Data;
+﻿using AlgorithmicTask.Core;
+using AlgorithmicTask.Data;
 using AlgorithmicTask.Handlers;
 using AlgorithmicTask.InputReaders;
 using AlgorithmicTask.Types;
@@ -10,6 +11,7 @@ namespace AlgorithmicTask
         private Input _input;
         private Outcome _outcome;
         private FileInputHandler _fileHandler;
+        private ConsoleInputHandler _consoleInputHandler;
         private BuiltinAlgorithmsHandler _algorithmsHandler;
         private ManualAlgorithsHandler _manualAlgorithmsHandler;
 
@@ -20,9 +22,10 @@ namespace AlgorithmicTask
             _fileHandler = new FileInputHandler();
             _algorithmsHandler = new BuiltinAlgorithmsHandler();
             _manualAlgorithmsHandler = new ManualAlgorithsHandler();
+            _consoleInputHandler = new ConsoleInputHandler();
         }
 
-        public char Start()
+        public async Task<char> Start()
         {
             char option = ' ';
             InputTypes inputType = new InputTypes();
@@ -47,7 +50,7 @@ namespace AlgorithmicTask
             int inputOption = int.Parse(option.ToString());
             inputType = (InputTypes)inputOption;
 
-            AlgorithmChoiceAndRun(inputType);
+            await AlgorithmChoiceAndRun(inputType);
 
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine("\nPress Enter to continue");
@@ -58,7 +61,7 @@ namespace AlgorithmicTask
             return option;
         }
 
-        private void AlgorithmChoiceAndRun(InputTypes inputTypes)
+        private async Task AlgorithmChoiceAndRun(InputTypes inputTypes)
         {
             char option = ' ';
             AlgorithmTypes algorithmType = new AlgorithmTypes();
@@ -79,18 +82,84 @@ namespace AlgorithmicTask
             algorithmType = (AlgorithmTypes)algOption;
 
             Console.WriteLine();
+            Result<string> workRes = null;
             switch (inputTypes)
             {
                 case InputTypes.File:
-                    // file work
+                    workRes = await StartFileWork(algorithmType);
                     break;
                 case InputTypes.Console:
                     // console work
                     break;
-                default: break;
+                default: return;
+            }
+
+            if (workRes == null) 
+            {
+                DisplayErrorMessage("Unexpected error. Finishing...");
+                return;
+            }
+            if (!workRes.IsSuccess) 
+            {
+                DisplayErrorMessage(workRes.Error);
+                return;
             }
 
             // run algorithms
+        }
+
+        private async Task<Result<string>> StartFileWork(AlgorithmTypes algorithmTypes)
+        {
+            var res = GetNumbersFromFile();
+            if (!res.IsSuccess) return res;
+
+            res = await SetNumbersFromFile();
+            
+            return res;
+        }
+
+        private Result<string> GetNumbersFromFile()
+        {
+            Console.Clear();
+            Console.WriteLine("Enter Full file path (C:\\Users\\User\\filename.txt): ");
+            _input.FilePath = @"" + Console.ReadLine();
+
+            if (string.IsNullOrEmpty(_input.FilePath))
+            {
+                DisplayErrorMessage("File path cannot be empty");
+                return Result<string>.Failure("");
+            }
+
+            return Result<string>.Success("");
+        }
+
+        private async Task<Result<string>> SetNumbersFromFile()
+        {
+            var result = await _fileHandler.ReadDataFromFileToStringAsync(_input.FilePath);
+
+            if (!result.IsSuccess)
+            {
+                DisplayErrorMessage(result.Error);
+                return Result<string>.Failure("");
+            }
+
+            var resultList = _fileHandler.GetNumbersList(result.Value);
+
+            if (!resultList.IsSuccess)
+            {
+                DisplayErrorMessage(resultList.Error);
+                return Result<string>.Failure("");
+            }
+
+            _input.Numbers = resultList.Value;
+            return Result<string>.Success("");
+        }
+
+        private void DisplayErrorMessage(string message)
+        {
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine(message);
+            Console.ResetColor();
         }
     }
 }

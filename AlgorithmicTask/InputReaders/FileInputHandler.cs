@@ -27,7 +27,7 @@ namespace AlgorithmicTask.InputReaders
             }
         }
 
-        public Result<List<int>> GetNumersList(string[] splitInput)
+        public Result<List<int>> GetNumbersList(string[] splitInput)
         {
             if (splitInput == null || splitInput.Length <= 0)
             {
