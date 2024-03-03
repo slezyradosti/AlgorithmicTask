@@ -1,7 +1,7 @@
 ﻿using AlgorithmicTask.Data;
 using AlgorithmicTask.Handlers;
 using AlgorithmicTask.InputReaders;
-using System.Diagnostics;
+using AlgorithmicTask.Types;
 
 namespace AlgorithmicTask
 {
@@ -25,6 +25,7 @@ namespace AlgorithmicTask
         public char Start()
         {
             char option = ' ';
+            InputTypes inputType = new InputTypes();
 
             Console.WriteLine("Welcome");
             Console.WriteLine("The program finds: Min, Max, Mean, Median, Max Ascending and Descending Sequences from number list");
@@ -43,7 +44,10 @@ namespace AlgorithmicTask
 
             Console.WriteLine();
 
-            AlgorithmChoice(option);
+            int inputOption = int.Parse(option.ToString());
+            inputType = (InputTypes)inputOption;
+
+            AlgorithmChoiceAndRun(inputType);
 
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine("\nPress Enter to continue");
@@ -54,9 +58,10 @@ namespace AlgorithmicTask
             return option;
         }
 
-        private void AlgorithmChoice(char inputOption)
+        private void AlgorithmChoiceAndRun(InputTypes inputTypes)
         {
             char option = ' ';
+            AlgorithmTypes algorithmType = new AlgorithmTypes();
 
             Console.Clear();
             Console.WriteLine("\nWhich algorithm would you like to use:");
@@ -70,19 +75,22 @@ namespace AlgorithmicTask
                 if (option == '3') return;
             }
 
+            int algOption = int.Parse(option.ToString());
+            algorithmType = (AlgorithmTypes)algOption;
+
             Console.WriteLine();
-            switch (inputOption)
+            switch (inputTypes)
             {
-                case '1':
+                case InputTypes.File:
                     // file work
                     break;
-                case '2':
+                case InputTypes.Console:
                     // console work
                     break;
                 default: break;
             }
 
-            // algorithms start
+            // run algorithms
         }
     }
 }
