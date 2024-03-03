@@ -3,6 +3,7 @@ using AlgorithmicTask.Data;
 using AlgorithmicTask.Handlers;
 using AlgorithmicTask.InputReaders;
 using AlgorithmicTask.Types;
+using System.Diagnostics;
 
 namespace AlgorithmicTask
 {
@@ -12,7 +13,7 @@ namespace AlgorithmicTask
         private Outcome _outcome;
         private FileInputHandler _fileHandler;
         private ConsoleInputHandler _consoleInputHandler;
-        private BuiltinAlgorithmsHandler _algorithmsHandler;
+        private BuiltinAlgorithmsHandler _builtinAlgorithmsHandler;
         private ManualAlgorithsHandler _manualAlgorithmsHandler;
 
         public UserInterface()
@@ -20,7 +21,7 @@ namespace AlgorithmicTask
             _input = new Input();
             _outcome = new Outcome();
             _fileHandler = new FileInputHandler();
-            _algorithmsHandler = new BuiltinAlgorithmsHandler();
+            _builtinAlgorithmsHandler = new BuiltinAlgorithmsHandler();
             _manualAlgorithmsHandler = new ManualAlgorithsHandler();
             _consoleInputHandler = new ConsoleInputHandler();
         }
@@ -82,43 +83,56 @@ namespace AlgorithmicTask
             algorithmType = (AlgorithmTypes)algOption;
 
             Console.WriteLine();
-            Result<string> workRes = null;
+            Result<string> inputRes = null;
+            // run interaction functions
             switch (inputTypes)
             {
                 case InputTypes.File:
-                    workRes = await StartFileWork();
+                    inputRes = await StartFileWork();
                     break;
                 case InputTypes.Console:
-                    workRes = GetASetNumbersFromConsole();
+                    inputRes = GetASetNumbersFromConsole();
                     break;
                 default: return;
             }
 
-            if (workRes == null) 
+            if (inputRes == null) 
             {
                 DisplayErrorMessage("Unexpected error. Finishing...");
                 return;
             }
-            if (!workRes.IsSuccess) 
+            if (!inputRes.IsSuccess) 
             {
-                DisplayErrorMessage(workRes.Error);
+                DisplayErrorMessage(inputRes.Error);
                 return;
             }
 
+            Result<string> algorithRes = null;
             // run algorithms
             switch (algorithmType)
             {
                 case AlgorithmTypes.BuiltIn:
-                    // buildin algorithms
+                    algorithRes = StartBuiltinAlgorithms();
                     break;
                 case AlgorithmTypes.Manual:
-                    // manual algorithms
+                    algorithRes = StartManualAlgorithms();
                     break;
                 default: return;
             }
 
-            // show results
+            if (algorithRes == null)
+            {
+                DisplayErrorMessage("Unexpected error. Finishing...");
+                return;
+            }
+            if (!algorithRes.IsSuccess)
+            {
+                DisplayErrorMessage(algorithRes.Error);
+                return;
+            }
 
+            // show results
+            DisplayResults(_outcome);
         }
 
         private async Task<Result<string>> StartFileWork()
@@ -190,6 +204,32 @@ namespace AlgorithmicTask
             }
 
             _input.Numbers = resultNumbers.Value;
+            return Result<string>.Success("");
+        }
+
+        public Result<string> StartBuiltinAlgorithms()
+        {
+            var nums = new List<int>(_input.Numbers);
+
+            var res = _builtinAlgorithmsHandler.StartAlgorithms(nums);
+
+            if (!res.IsSuccess) return Result<string>.Failure(res.Error);
+
+            _outcome = res.Value;
+
+            return Result<string>.Success("");
+        }
+
+        public Result<string> StartManualAlgorithms()
+        {
+            var nums = new List<int>(_input.Numbers);
+
+            var res = _manualAlgorithmsHandler.StartAlgorithms(nums);
+
+            if (!res.IsSuccess) return Result<string>.Failure(res.Error);
+
+            _outcome = res.Value;
+
             return Result<string>.Success("");
         }
 
