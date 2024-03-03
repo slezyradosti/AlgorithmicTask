@@ -81,6 +81,8 @@ namespace AlgorithmicTask
                     break;
                 default: break;
             }
+
+            // algorithms start
         }
     }
 }
