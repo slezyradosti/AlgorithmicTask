@@ -71,7 +71,7 @@ namespace AlgorithmicTask
 
             Console.Clear();
             Console.WriteLine("\nWhich algorithm would you like to use:");
-            Console.WriteLine("\t1 - Biult in fucntions");
+            Console.WriteLine("\t1 - Biult-in fucntions");
             Console.WriteLine("\t2 - Manual functions");
             Console.WriteLine("\t3 - Back");
 
