@@ -183,7 +183,7 @@ namespace AlgorithmicTask
 
             var resultNumbers = _consoleInputHandler.SetNumbersFromConsole(input);
 
-            if (!res.IsSuccess) return Result<string>.Failure(res.Error);
+            if (!resultNumbers.IsSuccess) return Result<string>.Failure(resultNumbers.Error);
 
             _input.Numbers = resultNumbers.Value;
             return Result<string>.Success("");
